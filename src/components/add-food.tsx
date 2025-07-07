@@ -5,24 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
+import type { FoodEntry } from "@/lib/storage";
 
 interface AddFoodProps {
   onBack: () => void;
-  onSave: (food: FoodEntry) => void;
+  onSave: (food: Omit<FoodEntry, 'id' | 'date' | 'time'>) => void;
 }
 
-interface FoodEntry {
-  name: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  meal: string;
-  serving: string;
-}
+type FoodFormData = Omit<FoodEntry, 'id' | 'date' | 'time'>;
 
 const AddFood = ({ onBack, onSave }: AddFoodProps) => {
-  const [food, setFood] = useState<FoodEntry>({
+  const [food, setFood] = useState<FoodFormData>({
     name: "",
     calories: 0,
     protein: 0,
@@ -40,7 +33,7 @@ const AddFood = ({ onBack, onSave }: AddFoodProps) => {
     }
   };
 
-  const updateField = (field: keyof FoodEntry, value: string | number) => {
+  const updateField = (field: keyof FoodFormData, value: string | number) => {
     setFood(prev => ({ ...prev, [field]: value }));
   };
 
