@@ -58,19 +58,19 @@ const BottomNav = ({ currentView, onViewChange }: BottomNavProps) => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border">
-      <div className="flex items-center justify-around px-2 py-2 max-w-md mx-auto">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border/50">
+      <div className="flex items-center justify-around px-3 py-3 max-w-md mx-auto">
         {navItems.map((item) => (
           <button
             key={item.id}
             onClick={() => onViewChange(item.id)}
             className={cn(
-              "flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200",
+              "flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-200",
               item.primary 
-                ? "bg-gradient-primary text-primary-foreground shadow-elevated scale-110 -mt-2"
+                ? "bg-primary text-primary-foreground shadow-floating scale-110 -mt-3 w-14 h-14"
                 : currentView === item.id
-                  ? "text-primary bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
             )}
           >
             <div className={cn(
@@ -79,12 +79,14 @@ const BottomNav = ({ currentView, onViewChange }: BottomNavProps) => {
             )}>
               {item.icon}
             </div>
-            <span className={cn(
-              "text-xs font-medium mt-1",
-              item.primary ? "text-primary-foreground" : ""
-            )}>
-              {item.label}
-            </span>
+            {!item.primary && (
+              <span className={cn(
+                "text-xs font-medium mt-1",
+                currentView === item.id ? "text-primary" : ""
+              )}>
+                {item.label}
+              </span>
+            )}
           </button>
         ))}
       </div>

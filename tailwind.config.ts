@@ -131,12 +131,13 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-primary': 'var(--gradient-primary)',
-				'gradient-wellness': 'var(--gradient-wellness)',
-				'gradient-data': 'var(--gradient-data)'
+				'gradient-background': 'var(--gradient-background)',
+				'gradient-card': 'var(--gradient-card)'
 			},
 			boxShadow: {
 				'card': 'var(--shadow-card)',
-				'elevated': 'var(--shadow-elevated)'
+				'elevated': 'var(--shadow-elevated)',
+				'floating': 'var(--shadow-floating)'
 			}
 		}
 	},
