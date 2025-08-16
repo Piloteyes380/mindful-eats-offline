@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProgressRing } from "@/components/ui/progress-ring";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { getFoodEntries, getGoals, getWaterIntake } from "@/lib/storage";
 import { useEffect, useState } from "react";
 import type { FoodEntry, Goals } from "@/lib/storage";
@@ -9,12 +10,14 @@ interface DashboardProps {
   onAddFood: () => void;
   onViewLog: () => void;
   onSetGoals: () => void;
+  onSearchFood: (category?: string, query?: string) => void;
 }
 
-const Dashboard = ({ onAddFood, onViewLog, onSetGoals }: DashboardProps) => {
+const Dashboard = ({ onAddFood, onViewLog, onSetGoals, onSearchFood }: DashboardProps) => {
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [goals, setGoals] = useState<Goals>({ calories: 2000, protein: 150, carbs: 200, fat: 65 });
   const [waterIntake, setWaterIntake] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     setEntries(getFoodEntries());
@@ -49,29 +52,39 @@ const Dashboard = ({ onAddFood, onViewLog, onSetGoals }: DashboardProps) => {
             </svg>
           </div>
           <input
-            className="w-full pl-12 pr-4 py-4 bg-muted rounded-2xl border-0 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full pl-12 pr-4 py-4 bg-muted rounded-2xl border-0 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
             placeholder="Search foods..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onClick={() => onSearchFood('all', searchQuery)}
             type="text"
           />
         </div>
 
         {/* Food Categories */}
-        <div className="flex justify-between space-x-3">
-          {[
-            { name: "All", icon: "🍽️", color: "bg-[hsl(var(--category-all))]" },
-            { name: "Protein", icon: "🥩", color: "bg-[hsl(var(--category-protein))]" },
-            { name: "Grains", icon: "🌾", color: "bg-[hsl(var(--category-grains))]" },
-            { name: "Veggies", icon: "🥬", color: "bg-[hsl(var(--category-veggies))]" },
-            { name: "Dairy", icon: "🥛", color: "bg-[hsl(var(--category-dairy))]" }
-          ].map((category) => (
-            <div key={category.name} className="flex flex-col items-center space-y-2">
-              <div className={`w-14 h-14 ${category.color} rounded-full flex items-center justify-center text-xl`}>
-                {category.icon}
-              </div>
-              <span className="text-xs font-medium text-muted-foreground">{category.name}</span>
-            </div>
-          ))}
-        </div>
+        <Carousel className="w-full">
+          <CarouselContent className="-ml-2">
+            {[
+              { id: "all", name: "All", icon: "🍽️", color: "bg-[hsl(var(--category-all))]" },
+              { id: "protein", name: "Protein", icon: "🥩", color: "bg-[hsl(var(--category-protein))]" },
+              { id: "grains", name: "Grains", icon: "🌾", color: "bg-[hsl(var(--category-grains))]" },
+              { id: "veggies", name: "Veggies", icon: "🥬", color: "bg-[hsl(var(--category-veggies))]" },
+              { id: "dairy", name: "Dairy", icon: "🥛", color: "bg-[hsl(var(--category-dairy))]" }
+            ].map((category) => (
+              <CarouselItem key={category.name} className="basis-1/5 pl-2">
+                <div 
+                  className="flex flex-col items-center space-y-2 cursor-pointer hover:scale-105 transition-transform"
+                  onClick={() => onSearchFood(category.id)}
+                >
+                  <div className={`w-14 h-14 ${category.color} rounded-full flex items-center justify-center text-xl shadow-md`}>
+                    {category.icon}
+                  </div>
+                  <span className="text-xs font-medium text-muted-foreground text-center">{category.name}</span>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
 
         {/* Main Calorie Card */}
         <Card className="shadow-card border-0 bg-gradient-card">
